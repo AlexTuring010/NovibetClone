@@ -28,18 +28,17 @@ The primary goal of this app is to integrate and test our AI model, ensuring it 
    ```bash
    git clone https://github.com/your-repo/simplified-casino-app.git
    ```
-2. Navigate to the project directory:
-   ```bash
-   cd simplified-casino-app
+2. Open Android Studio and select **Open an Existing Project**.
+3. Navigate to the cloned repository and open the project.
+4. Allow Android Studio to sync and install necessary dependencies.
+5. Run the application on an emulator or a connected device:
    ```
-3. Install dependencies:
-   ```bash
-   npm install  # or yarn install
-   ```
-4. Run the application:
-   ```bash
-   npm start  # or yarn start
+   Click on Run > Run 'app'
    ```
 
 ## Contributing
 Contributions are welcome! Feel free to submit issues or pull requests to enhance the project.
+
+---
+This project is **not** affiliated with Novibet or any real-world gambling platforms. It is purely for testing and AI development purposes.
+
