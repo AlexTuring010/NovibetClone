@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Search bar container -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="horizontal"
+    android:background="@drawable/glass_background"
+    android:padding="8dp"
+    android:gravity="center_vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="0dp"
+    android:layout_marginEnd="8dp">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/baseline_search" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:hint="@string/search_bar_string"
+        android:paddingStart="8dp"
+        android:paddingEnd="4dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="13sp" />
+</LinearLayout>

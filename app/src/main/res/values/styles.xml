@@ -4,4 +4,7 @@
         <item name="android:background">#FF0202</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="RoundedCornersImage">
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

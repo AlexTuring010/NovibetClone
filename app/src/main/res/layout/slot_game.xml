@@ -1,0 +1,33 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/image_slot_game"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/RoundedCornersImage" />
+
+    <TextView
+        android:id="@+id/text_game_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:paddingTop="4dp" />
+
+    <TextView
+        android:id="@+id/text_studio_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:paddingTop="2dp" />
+</LinearLayout>

@@ -3,7 +3,9 @@ package com.example.novibetsafegamblingsimulator
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         val adItems = listOf(
+            AdItem(R.drawable.carnival),
             AdItem(R.drawable.carousel),
             AdItem(R.drawable.carousel_gr),
             AdItem(R.drawable.carousel_2024_gr),
@@ -82,6 +85,30 @@ class MainActivity : AppCompatActivity() {
         })
 
         startAutoScroll()
+
+        val slotGames = listOf(
+            SlotGame(R.drawable.piggies, "Piggies and the Bank Cash Collect and Link", "Playtech"),
+            SlotGame(R.drawable.game2, "Carnaval Drums", "Gameburger Studios"),
+            SlotGame(R.drawable.game3, "Boss Cass Deluxe", "Alchemy Gaming"),
+            SlotGame(R.drawable.game4, "Lucky Piper", "Gamevy"),
+            SlotGame(R.drawable.game5, "Camelot Cash", "Relax Gaming"),
+            SlotGame(R.drawable.game6, "Kingfisher of the Caribbean", "Wishbone"),
+            SlotGame(R.drawable.game7, "Lucky Streak 27", "Endorphina"),
+            SlotGame(R.drawable.game8, "Hyperstrike Diamond Drums", "Gameburger Studios"),
+            SlotGame(R.drawable.game9, "Rome Fight For Gold Eternal Empire", "Foxium"),
+            SlotGame(R.drawable.game10, "Silver Lux Triple Bonus Gems", "Novomatic"),
+            SlotGame(R.drawable.game11, "Streak of Luck Double Dice", "Playtech"),
+            SlotGame(R.drawable.game12, "Deco Diamonds Elite", "Just For The Win")
+        )
+
+        val recyclerViewSlots: RecyclerView = findViewById(R.id.recycler_view_slots)
+        val gridLayoutManager = GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false)
+        recyclerViewSlots.layoutManager = gridLayoutManager
+        recyclerViewSlots.adapter = SlotGameAdapter(slotGames)
+
+        val gameCountTextView: TextView = findViewById(R.id.game_count)
+        val gameCount = slotGames.size
+        gameCountTextView.text = gameCount.toString()
     }
 
     private fun startAutoScroll() {
