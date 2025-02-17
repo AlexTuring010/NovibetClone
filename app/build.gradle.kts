@@ -36,13 +36,12 @@ android {
 }
 
 dependencies {
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.activity:activity-ktx:1.4.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.2")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.google.android.material:material:1.5.0-alpha04")
+    testImplementation("junit:junit:4.13.2")
 }

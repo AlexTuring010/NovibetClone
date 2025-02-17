@@ -4,4 +4,6 @@
     <color name="grey">#808080</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red_background">#D32F2F</color>
+    <color name="selected_tab_color">#00E6FF</color> <!-- Red color for the selected tab -->
+    <color name="unselected_tab_color">#8DCCCCCC</color> <!-- Gray color for the unselected tabs -->
 </resources>
