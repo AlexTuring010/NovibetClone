@@ -1,16 +1,19 @@
 package com.example.novibetsafegamblingsimulator
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.RecyclerView
 
 data class SlotGame(
     val imageResId: Int,
     val gameName: String,
-    val studioName: String
+    val studioName: String,
+    val isClickable: Boolean 
 )
 
 class SlotGameAdapter(private val slotGames: List<SlotGame>) : RecyclerView.Adapter<SlotGameAdapter.SlotGameViewHolder>() {
@@ -31,6 +34,22 @@ class SlotGameAdapter(private val slotGames: List<SlotGame>) : RecyclerView.Adap
         holder.imageSlotGame.setImageResource(slotGame.imageResId)
         holder.textGameName.text = slotGame.gameName
         holder.textStudioName.text = slotGame.studioName
+        if (slotGame.isClickable) {
+            holder.itemView.setOnClickListener {
+                val context = holder.itemView.context
+                val intent = Intent(context, SlotGameDetailActivity::class.java)
+                intent.putExtra("gameName", slotGame.gameName)
+                intent.putExtra("studioName", slotGame.studioName)
+                val options = ActivityOptionsCompat.makeCustomAnimation(
+                    context,
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left
+                )
+                context.startActivity(intent, options.toBundle())
+            }
+        } else {
+            holder.itemView.setOnClickListener(null)
+        }
     }
 
     override fun getItemCount(): Int {

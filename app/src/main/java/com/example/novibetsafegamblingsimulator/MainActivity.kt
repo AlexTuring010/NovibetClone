@@ -3,8 +3,15 @@ package com.example.novibetsafegamblingsimulator
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Window
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var balanceViewModel: BalanceViewModel
     private lateinit var viewPagerAds: ViewPager2
     private lateinit var customTabLines: CustomTabLinesView
     private val handler = Handler(Looper.getMainLooper())
@@ -21,6 +29,40 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.footer_background)
+
+        val profileIcon: FrameLayout = findViewById(R.id.profile_pic)
+        profileIcon.setOnClickListener {
+            val profileBottomSheet = ProfileBottomSheetFragment()
+            profileBottomSheet.show(supportFragmentManager, profileBottomSheet.tag)
+        }
+
+        val down_arrow: FrameLayout = findViewById(R.id.arrow_down)
+        down_arrow.setOnClickListener {
+            val profileBottomSheet = ProfileBottomSheetFragment()
+            profileBottomSheet.show(supportFragmentManager, profileBottomSheet.tag)
+        }
+
+        val remainAmountFrame: FrameLayout = findViewById(R.id.remain_amount_frame)
+
+        remainAmountFrame.setOnClickListener {
+            val profileBottomSheet = ProfileBottomSheetFragment()
+            profileBottomSheet.show(supportFragmentManager, profileBottomSheet.tag)
+        }
+
+        val remainAmountTextView: TextView = findViewById(R.id.remain_amount)
+
+        // Get the shared BalanceViewModel from the Application
+        balanceViewModel = (application as MyApplication).balanceViewModel
+
+        // Observe the balance amount
+        balanceViewModel.balance.observe(this, Observer { newBalance ->
+            remainAmountTextView.text = newBalance
+        })
+
+        // Set initial balance
+        balanceViewModel.setBalance("100€")
 
         val firstRecyclerView = findViewById<RecyclerView>(R.id.first_recycler_view)
         val secondRecyclerView = findViewById<RecyclerView>(R.id.second_recycler_view)
@@ -87,18 +129,19 @@ class MainActivity : AppCompatActivity() {
         startAutoScroll()
 
         val slotGames = listOf(
-            SlotGame(R.drawable.piggies, "Piggies and the Bank Cash Collect and Link", "Playtech"),
-            SlotGame(R.drawable.game2, "Carnaval Drums", "Gameburger Studios"),
-            SlotGame(R.drawable.game3, "Boss Cass Deluxe", "Alchemy Gaming"),
-            SlotGame(R.drawable.game4, "Lucky Piper", "Gamevy"),
-            SlotGame(R.drawable.game5, "Camelot Cash", "Relax Gaming"),
-            SlotGame(R.drawable.game6, "Kingfisher of the Caribbean", "Wishbone"),
-            SlotGame(R.drawable.game7, "Lucky Streak 27", "Endorphina"),
-            SlotGame(R.drawable.game8, "Hyperstrike Diamond Drums", "Gameburger Studios"),
-            SlotGame(R.drawable.game9, "Rome Fight For Gold Eternal Empire", "Foxium"),
-            SlotGame(R.drawable.game10, "Silver Lux Triple Bonus Gems", "Novomatic"),
-            SlotGame(R.drawable.game11, "Streak of Luck Double Dice", "Playtech"),
-            SlotGame(R.drawable.game12, "Deco Diamonds Elite", "Just For The Win")
+            SlotGame(R.drawable.coin_toss, "Coin Toss", "CTRL-ALT-DIT", true),
+            SlotGame(R.drawable.piggies, "Piggies and the Bank Cash Collect and Link", "Playtech", false),
+            SlotGame(R.drawable.game2, "Carnaval Drums", "Gameburger Studios", false),
+            SlotGame(R.drawable.game3, "Boss Cass Deluxe", "Alchemy Gaming", false),
+            SlotGame(R.drawable.game4, "Lucky Piper", "Gamevy", false),
+            SlotGame(R.drawable.game5, "Camelot Cash", "Relax Gaming", false),
+            SlotGame(R.drawable.game6, "Kingfisher of the Caribbean", "Wishbone", false),
+            SlotGame(R.drawable.game7, "Lucky Streak 27", "Endorphina", false),
+            SlotGame(R.drawable.game8, "Hyperstrike Diamond Drums", "Gameburger Studios", false),
+            SlotGame(R.drawable.game9, "Rome Fight For Gold Eternal Empire", "Foxium", false),
+            SlotGame(R.drawable.game10, "Silver Lux Triple Bonus Gems", "Novomatic", false),
+            SlotGame(R.drawable.game11, "Streak of Luck Double Dice", "Playtech", false),
+            SlotGame(R.drawable.game12, "Deco Diamonds Elite", "Just For The Win", false)
         )
 
         val recyclerViewSlots: RecyclerView = findViewById(R.id.recycler_view_slots)

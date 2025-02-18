@@ -2,8 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="grey">#808080</color>
+    <color name="light_grey">#56C0C0C0</color>
+    <color name="light_yellow">#70FFFF9C</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red_background">#D32F2F</color>
     <color name="selected_tab_color">#00E6FF</color> <!-- Red color for the selected tab -->
     <color name="unselected_tab_color">#8DCCCCCC</color> <!-- Gray color for the unselected tabs -->
+    <color name="game_blue">#295293</color>
+    <color name="footer_background">#31343e</color>
 </resources>
