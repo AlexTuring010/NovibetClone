@@ -6,4 +6,22 @@
     <string name="money">0,00€</string>
     <string name="company_name">novibet</string>
     <string name="an_image_description">an image</string>
+    <string-array name="amount_options">
+        <item>5,00$</item>
+        <item>10,00$</item>
+        <item>20,00$</item>
+        <item>50,00$</item>
+        <item>75,00$</item>
+        <item>100,00$</item>
+        <item>125,00$</item>
+        <item>150,00$</item>
+        <item>175,00$</item>
+        <item>200,00$</item>
+        <item>225,00$</item>
+        <item>250,00$</item>
+        <item>275,00$</item>
+        <item>300,00$</item>
+        <item>350,00$</item>
+        <item>400,00$</item>
+    </string-array>
 </resources>

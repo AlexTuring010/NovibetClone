@@ -1,9 +1,8 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/main_background"
     android:padding="0dp">
@@ -11,6 +10,36 @@
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_button"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:background="@drawable/button_background"
+            android:layout_marginEnd="5dp"
+            android:text="ΕΙΣΟΔΟΣ"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:textColorLink="#FF0000"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/register_button"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:background="@drawable/login_button_background"
+            android:layout_marginEnd="10dp"
+            android:text="ΕΓΓΡΑΦΗ"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:textColorLink="#FF0000"
+            android:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/game_activity_back_button"
@@ -125,7 +154,7 @@
                 android:padding="8dp"
                 android:textSize="16dp"
                 android:height="70dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"/>
 
             <ToggleButton
@@ -155,5 +184,41 @@
                 android:textSize="13dp"
                 android:layout_marginBottom="8dp"/>
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <ImageView
+                android:id="@+id/volume_on"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/baseline_volume_up" />
+            <ImageView
+                android:id="@+id/volume_off"
+                android:visibility="gone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/baseline_volume_off" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bet_result_recycler_view"
+            android:layout_width="fill_parent"
+            android:padding="5dp"
+            android:layout_height="250dp"
+            android:background="@drawable/glass_black_background"
+            android:layout_marginTop="28dp"
+            android:layout_marginLeft="140dp"
+            android:layout_marginRight="15dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
     </FrameLayout>
 </LinearLayout>

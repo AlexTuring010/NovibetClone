@@ -10,10 +10,10 @@ class MyApplication : Application() {
         ViewModelStore()
     }
 
-    val balanceViewModel: BalanceViewModel by lazy {
+    val userViewModel: UserViewModel by lazy {
         ViewModelProvider(
             appViewModelStore,
-            BalanceViewModelFactory.getInstance(this)
-        ).get(BalanceViewModel::class.java)
+            ViewModelProvider.AndroidViewModelFactory.getInstance(this)
+        ).get(UserViewModel::class.java)
     }
 }

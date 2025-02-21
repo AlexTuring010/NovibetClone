@@ -27,5 +27,7 @@
         android:paddingEnd="4dp"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/darker_gray"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 </LinearLayout>

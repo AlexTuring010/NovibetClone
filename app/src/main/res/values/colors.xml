@@ -10,4 +10,10 @@
     <color name="unselected_tab_color">#8DCCCCCC</color> <!-- Gray color for the unselected tabs -->
     <color name="game_blue">#295293</color>
     <color name="footer_background">#31343e</color>
+    <color name="dark_blue">#0e1f30</color>
+    <color name="blue">#042f69</color>
+    <color name="light_blue">#134387</color>
+    <color name="transparent">#00134387</color>
+    <color name="red">#FF0C0C</color>
+    <color name="green">#2DFF00</color>
 </resources>

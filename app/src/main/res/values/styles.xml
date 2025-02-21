@@ -7,4 +7,7 @@
     <style name="RoundedCornersImage">
         <item name="cornerSize">16dp</item>
     </style>
+     <style name="NoAnimationSpinnerPopup" parent="Widget.AppCompat.Spinner">
+        <item name="android:popupAnimationStyle">@null</item>
+    </style>
 </resources>

@@ -1,17 +1,24 @@
 package com.example.novibetsafegamblingsimulator
 
+import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Window
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,17 +26,22 @@ import androidx.viewpager2.widget.ViewPager2
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var balanceViewModel: BalanceViewModel
+    private lateinit var recyclerViewSlots: RecyclerView
     private lateinit var viewPagerAds: ViewPager2
     private lateinit var customTabLines: CustomTabLinesView
     private val handler = Handler(Looper.getMainLooper())
     private var currentPage = 0
     private var progress = 0f
+    private lateinit var loginButton: AppCompatButton
+
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
+
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, true)
+
         window.navigationBarColor = ContextCompat.getColor(this, R.color.footer_background)
 
         val profileIcon: FrameLayout = findViewById(R.id.profile_pic)
@@ -53,16 +65,62 @@ class MainActivity : AppCompatActivity() {
 
         val remainAmountTextView: TextView = findViewById(R.id.remain_amount)
 
-        // Get the shared BalanceViewModel from the Application
-        balanceViewModel = (application as MyApplication).balanceViewModel
+        val depositButton: Button = findViewById(R.id.deposit_button)
+        depositButton.setOnClickListener {
+            showPopup()
+        }
+
+        // Get the shared UserViewModel from the Application
+        userViewModel = (application as MyApplication).userViewModel
 
         // Observe the balance amount
-        balanceViewModel.balance.observe(this, Observer { newBalance ->
-            remainAmountTextView.text = newBalance
+        userViewModel.balance.observe(this, Observer { newBalance ->
+            remainAmountTextView.text = "$newBalance€"
         })
 
-        // Set initial balance
-        balanceViewModel.setBalance("100€")
+        loginButton = findViewById(R.id.login_button)
+        val registerButton: Button = findViewById(R.id.register_button)
+
+        userViewModel.isLoggedIn.observe(this, Observer { isLoggedIn ->
+            if (isLoggedIn) {
+                depositButton.visibility = View.VISIBLE
+                profileIcon.visibility = View.VISIBLE
+                down_arrow.visibility = View.VISIBLE
+                remainAmountFrame.visibility = View.VISIBLE
+                loginButton.visibility = View.GONE
+                registerButton.visibility = View.GONE
+            } else {
+                depositButton.visibility = View.GONE
+                profileIcon.visibility = View.GONE
+                down_arrow.visibility = View.GONE
+                remainAmountFrame.visibility = View.GONE
+                loginButton.visibility = View.VISIBLE
+                registerButton.visibility = View.VISIBLE
+            }
+        })
+
+        loginButton.setOnClickListener {
+            val loginFragment = LoginFragment()
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_down, R.anim.slide_out_up)
+                .add(android.R.id.content, loginFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        registerButton.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            val options = ActivityOptionsCompat.makeCustomAnimation(
+                this,
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+            startActivity(intent, options.toBundle())
+        }
+
+        // Example of setting the login state
+        // userViewModel.login() // Call this to set the state to logged in
+        // userViewModel.logout() // Call this to set the state to logged ouu
 
         val firstRecyclerView = findViewById<RecyclerView>(R.id.first_recycler_view)
         val secondRecyclerView = findViewById<RecyclerView>(R.id.second_recycler_view)
@@ -144,7 +202,7 @@ class MainActivity : AppCompatActivity() {
             SlotGame(R.drawable.game12, "Deco Diamonds Elite", "Just For The Win", false)
         )
 
-        val recyclerViewSlots: RecyclerView = findViewById(R.id.recycler_view_slots)
+        recyclerViewSlots = findViewById(R.id.recycler_view_slots)
         val gridLayoutManager = GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false)
         recyclerViewSlots.layoutManager = gridLayoutManager
         recyclerViewSlots.adapter = SlotGameAdapter(slotGames)
@@ -152,6 +210,48 @@ class MainActivity : AppCompatActivity() {
         val gameCountTextView: TextView = findViewById(R.id.game_count)
         val gameCount = slotGames.size
         gameCountTextView.text = gameCount.toString()
+    }
+
+    private fun showPopup() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.add_money_popup)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val closeButton: ImageView = dialog.findViewById(R.id.close_icon)
+        closeButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        val confirmButton: Button = dialog.findViewById(R.id.confirm_button)
+        confirmButton.setOnClickListener {
+            val amountSpinner: Spinner = dialog.findViewById(R.id.amount_spinner)
+            val selectedAmountString = amountSpinner.selectedItem.toString()
+            val selectedAmount = selectedAmountString
+                .replace(",", ".")
+                .replace("$", "")
+                .toFloatOrNull() ?: 0.0f
+
+            // Get the current balance
+            val currentBalance = userViewModel.balance.value ?: 0.0f
+
+            // Update the balance
+            val newBalance = currentBalance + selectedAmount
+            userViewModel.updateBalance(newBalance)
+
+            dialog.dismiss()
+        }
+
+        val amountSpinner: Spinner = dialog.findViewById(R.id.amount_spinner)
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.amount_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            amountSpinner.adapter = adapter
+        }
+
+        dialog.show()
     }
 
     private fun startAutoScroll() {
@@ -175,5 +275,30 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks)
+    }
+
+    private val fragmentLifecycleCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentStarted(fm: FragmentManager, f: Fragment) {
+            if (f is LoginFragment) {
+                recyclerViewSlots.isClickable = false
+                loginButton.isClickable = false
+                recyclerViewSlots.alpha = 0.5f // Optional: visually indicate that it's disabled
+                for (i in 0 until recyclerViewSlots.childCount) {
+                    recyclerViewSlots.getChildAt(i).isClickable = false
+                }
+            }
+        }
+
+        override fun onFragmentStopped(fm: FragmentManager, f: Fragment) {
+            if (f is LoginFragment) {
+                recyclerViewSlots.isClickable = true
+                loginButton.isClickable = true
+                recyclerViewSlots.alpha = 1.0f // Restore original appearance
+                for (i in 0 until recyclerViewSlots.childCount) {
+                    recyclerViewSlots.getChildAt(i).isClickable = true
+                }
+            }
+        }
     }
 }
