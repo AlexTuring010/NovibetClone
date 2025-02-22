@@ -6,17 +6,36 @@
     android:background="@drawable/profile_background"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/profile_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="0dp"
         android:layout_marginTop="20dp"
-        android:text="John Doe"
-        android:textStyle="bold"
-        android:layout_gravity="start"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:layout_marginBottom="0dp" />
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="John Doe"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:layout_marginBottom="0dp" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024-11-05"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:layout_marginBottom="0dp" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/logout"

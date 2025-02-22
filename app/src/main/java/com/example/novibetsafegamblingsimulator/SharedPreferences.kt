@@ -18,6 +18,12 @@ class SharedPreferencesHelper(context: Context) {
         editor.apply()
     }
 
+    fun saveDate(date: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("date", date)
+        editor.apply()
+    }
+
     fun getUser(): User? {
         val customerId = sharedPreferences.getInt("customer_id", -1)
         if (customerId == -1) return null
@@ -29,6 +35,11 @@ class SharedPreferencesHelper(context: Context) {
         val password = sharedPreferences.getString("password", null) ?: return null
 
         return User(customerId, ageBand, gender, totalRemain, username, password)
+    }
+
+    fun getDate(): String? {
+        val date = sharedPreferences.getString("date", null) ?: return null
+        return date
     }
 
     fun clearUser() {

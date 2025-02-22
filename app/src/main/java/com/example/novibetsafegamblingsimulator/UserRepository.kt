@@ -10,6 +10,7 @@ import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
+import java.util.Date
 
 class UserRepository {
     val client = createSupabaseClient(
@@ -105,5 +106,12 @@ data class User(
     val total_remain: Float,
     val username: String,
     val password: String
+)
+
+@Serializable
+data class Transaction(
+    val transaction_id: Int,
+    val customer_id: Int,
+    val data: String
 )
 
