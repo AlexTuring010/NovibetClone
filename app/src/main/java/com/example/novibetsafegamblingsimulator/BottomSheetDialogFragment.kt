@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.Calendar
 import android.app.DatePickerDialog
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,6 +20,7 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
     private val calendar: Calendar = Calendar.getInstance()
     private lateinit var dateTextView: TextView
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,10 +30,15 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
         userViewModel = (requireActivity().application as MyApplication).userViewModel
 
         val totalBalanceTextView: TextView = view.findViewById(R.id.total_balance)
+        val budget: TextView = view.findViewById(R.id.budget)
         val username: TextView = view.findViewById(R.id.profile_name)
 
+        userViewModel.budget.observe(viewLifecycleOwner, Observer { newBudget ->
+            budget.text = "{$newBudget}"
+        })
+
         userViewModel.balance.observe(viewLifecycleOwner, Observer { newBalance ->
-            totalBalanceTextView.text = "$newBalance€"
+            totalBalanceTextView.text = "${newBalance}€"
         })
 
         userViewModel.username.observe(viewLifecycleOwner, Observer { newUsername ->

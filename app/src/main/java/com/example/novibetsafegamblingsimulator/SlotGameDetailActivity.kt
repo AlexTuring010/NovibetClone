@@ -23,8 +23,11 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SlotGameDetailActivity : AppCompatActivity() {
 
@@ -39,6 +42,7 @@ class SlotGameDetailActivity : AppCompatActivity() {
     private lateinit var music_off: ImageView
     private lateinit var userViewModel: UserViewModel
     private lateinit var betResultAdapter: BetResultAdapter
+    private val userRepository = UserRepository()
 
     private val betValues = listOf("5€", "10€", "20€", "50€", "100€", "150€", "200€")
     private var currentBetIndex = 0
@@ -200,14 +204,24 @@ class SlotGameDetailActivity : AppCompatActivity() {
             val betResult = BetResult(result, isWin, betAmount)
             betResultAdapter.addBetResult(betResult)
             betResultRecyclerView.scrollToPosition(betResultAdapter.itemCount - 1)
+            val currentBalance: Float?
+            val newBalance: Float?
             if(isWin){
-                val currentBalance = userViewModel.balance.value ?: 0.0f
-                val newBalance = currentBalance + betAmount
+                currentBalance = userViewModel.balance.value ?: 0.0f
+                newBalance = currentBalance + betAmount
                 userViewModel.updateBalance(newBalance)
             } else{
-                val currentBalance = userViewModel.balance.value ?: 0.0f
-                val newBalance = currentBalance - betAmount
+                currentBalance = userViewModel.balance.value ?: 0.0f
+                newBalance = currentBalance - betAmount
                 userViewModel.updateBalance(newBalance)
+            }
+            val user: User? = userViewModel.user.value
+            val date: String? = userViewModel.date.value
+            userViewModel.viewModelScope.launch {
+                if (user != null) {
+                    delay(2000) // 2-second cooldown before making the request
+                    userRepository.insertTransaction(user.customer_id, date, 0, currentBalance, newBalance, 1, betAmount, isWin)
+                }
             }
         }
 
@@ -351,8 +365,16 @@ class SlotGameDetailActivity : AppCompatActivity() {
 
             // Update the balance
             val newBalance = currentBalance + selectedAmount
-            userViewModel.updateBalance(newBalance)
 
+            val user: User? = userViewModel.user.value
+            val date: String? = userViewModel.date.value
+            userViewModel.viewModelScope.launch {
+                if (user != null) {
+                    userRepository.insertTransaction(user.customer_id, date, 1, currentBalance, newBalance, null, null, null)
+                }
+            }
+
+            userViewModel.updateBalance(newBalance)
             dialog.dismiss()
         }
 

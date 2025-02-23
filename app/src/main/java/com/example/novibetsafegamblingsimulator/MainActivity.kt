@@ -19,10 +19,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -212,6 +215,8 @@ class MainActivity : AppCompatActivity() {
         gameCountTextView.text = gameCount.toString()
     }
 
+    private val userRepository = UserRepository()
+
     private fun showPopup() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.add_money_popup)
@@ -236,6 +241,15 @@ class MainActivity : AppCompatActivity() {
 
             // Update the balance
             val newBalance = currentBalance + selectedAmount
+
+            val user: User? = userViewModel.user.value
+            val date: String? = userViewModel.date.value
+            userViewModel.viewModelScope.launch {
+                if (user != null) {
+                    userRepository.insertTransaction(user.customer_id, date, 1, currentBalance, newBalance, null, null, null)
+                }
+            }
+
             userViewModel.updateBalance(newBalance)
 
             dialog.dismiss()

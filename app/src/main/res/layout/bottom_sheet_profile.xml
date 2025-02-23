@@ -45,8 +45,34 @@
         android:layout_marginTop="5dp"
         android:textSize="12sp"
         android:textColor="@android:color/holo_red_dark"
-        android:layout_gravity="start"
-        android:layout_marginBottom="20dp" />
+        android:layout_gravity="start" />
+
+    <LinearLayout
+        android:layout_width = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:orientation = "horizontal"
+        android:layout_marginTop="5dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Προτεινούμενο budget βδομάδας:"
+        android:textStyle = "bold"
+        android:textSize="12sp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:layout_gravity="start"/>
+
+    <TextView
+        android:id="@+id/budget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:text="50,00€$"
+        android:textStyle = "bold"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:layout_gravity="start"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -119,6 +120,13 @@ class RegisterActivity : AppCompatActivity() {
                     val newUser: User? = userRepository.createUser(username, password)
                     if(newUser != null){
                         userViewModel.login(newUser)
+                        val user: User? = userViewModel.user.value
+                        val date: String? = userViewModel.date.value
+                        userViewModel.viewModelScope.launch {
+                            if (user != null) {
+                                userRepository.insertTransaction(user.customer_id, date, 3, 0.0f, 0.0f, null, null, null)
+                            }
+                        }
                         finish()
                     } else{
                         errorFrame.visibility = View.VISIBLE
