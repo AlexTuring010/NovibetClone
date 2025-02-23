@@ -32,10 +32,20 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
         val totalBalanceTextView: TextView = view.findViewById(R.id.total_balance)
         val budget: TextView = view.findViewById(R.id.budget)
         val username: TextView = view.findViewById(R.id.profile_name)
+        val riskLevel: TextView = view.findViewById(R.id.risk_level)
 
         userViewModel.budget.observe(viewLifecycleOwner, Observer { newBudget ->
             val integerPart = newBudget?.toInt() ?: 0
             budget.text = "$integerPart€"
+        })
+
+        userViewModel.flag_percentage.observe(viewLifecycleOwner, Observer { newPercentage ->
+            val percentageString = if (newPercentage != null) {
+                "${(newPercentage * 100).toInt()}%"
+            } else {
+                "N/A"
+            }
+            riskLevel.text = percentageString
         })
 
         userViewModel.balance.observe(viewLifecycleOwner, Observer { newBalance ->
@@ -62,7 +72,18 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showDatePicker() {
+        // Parse the date from userViewModel.data
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = userViewModel.date.value?.let {
+            dateFormat.parse(it)
+        } ?: Date() // Fallback to today's date if userViewModel.data is null
+
+        val calendar = Calendar.getInstance().apply {
+            time = date
+        }
+
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
@@ -71,7 +92,6 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
             requireContext(),
             { _, selectedYear, selectedMonth, selectedDay ->
                 calendar.set(selectedYear, selectedMonth, selectedDay)
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 userViewModel.updateData(dateFormat.format(calendar.time))
             },
             year, month, day

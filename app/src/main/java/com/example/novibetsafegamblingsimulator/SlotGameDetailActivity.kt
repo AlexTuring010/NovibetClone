@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -17,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import android.widget.VideoView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityOptionsCompat
@@ -49,6 +51,7 @@ class SlotGameDetailActivity : AppCompatActivity() {
 
     private lateinit var backButton: FrameLayout
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -209,11 +212,11 @@ class SlotGameDetailActivity : AppCompatActivity() {
             if(isWin){
                 currentBalance = userViewModel.balance.value ?: 0.0f
                 newBalance = currentBalance + betAmount
-                userViewModel.updateBalance(newBalance)
+                userViewModel.updateBalance(newBalance, true)
             } else{
                 currentBalance = userViewModel.balance.value ?: 0.0f
                 newBalance = currentBalance - betAmount
-                userViewModel.updateBalance(newBalance)
+                userViewModel.updateBalance(newBalance, true)
             }
             val user: User? = userViewModel.user.value
             val date: String? = userViewModel.date.value
@@ -341,6 +344,7 @@ class SlotGameDetailActivity : AppCompatActivity() {
         videoView.layoutParams = videoViewParams
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showPopup() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.add_money_popup)
@@ -374,7 +378,7 @@ class SlotGameDetailActivity : AppCompatActivity() {
                 }
             }
 
-            userViewModel.updateBalance(newBalance)
+            userViewModel.updateBalance(newBalance, false)
             dialog.dismiss()
         }
 

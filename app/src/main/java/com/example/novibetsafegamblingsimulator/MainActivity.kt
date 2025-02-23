@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            userViewModel.updateBalance(newBalance)
+            userViewModel.updateBalance(newBalance, false)
 
             dialog.dismiss()
         }

@@ -147,7 +147,7 @@
                 android:id="@+id/bet_button"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:text="BET"
+                android:text="50$"
                 android:background="@drawable/toggle_button"
                 android:textColor="@color/white"
                 android:textStyle="bold"

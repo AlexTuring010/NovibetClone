@@ -47,6 +47,12 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val _date = MutableLiveData<String?>()
     val date: MutableLiveData<String?> get() = _date
 
+    private val _flag_percentage = MutableLiveData<Float?>()
+    val flag_percentage: MutableLiveData<Float?> get() = _flag_percentage
+
+    private val _isFlagged = MutableLiveData<Boolean?>()
+    val isFlagged: MutableLiveData<Boolean?> get() = _isFlagged
+
     private val sharedPreferencesHelper = SharedPreferencesHelper(application)
     private val userRepository = UserRepository()
 
@@ -64,10 +70,74 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
             _username.value = savedUser.username
             _isLoggedIn.value = true
             updateBudget()
+            updateFlagPrediction()
         } else {
             _isLoggedIn.value = false
         }
 
+    }
+
+    fun updateFlagPrediction() {
+        val client = OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS) // Increase connection timeout
+            .readTimeout(60, TimeUnit.SECONDS)    // Increase read timeout
+            .writeTimeout(60, TimeUnit.SECONDS)   // Increase write timeout
+            .build()
+
+        // Parse the input date
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val parsedDate = LocalDate.parse(_date.value, dateFormatter)
+        Log.d("updateFlagPrediction", "Parsed date: $parsedDate")
+
+        // Format the date to the required string format
+        val formattedDate = parsedDate.format(dateFormatter)
+        Log.d("updateFlagPrediction", "Formatted date: $formattedDate")
+
+        // Construct the URL with the customer_id and the date
+        val url = "https://ctrl-alt-dit-yb2k.onrender.com/predict_flag?customer_id=${_user.value?.customer_id}&date=${formattedDate}"
+        Log.d("updateFlagPrediction", "Constructed URL: $url")
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("updateFlagPrediction", "Request failed", e)
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    Log.e("updateFlagPrediction", "Unexpected response code: ${response.code}")
+                    return
+                }
+
+                val responseData = response.body?.string()
+                Log.d("updateFlagPrediction", "Response data: $responseData")
+
+                if (responseData != null) {
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val result = jsonObject.getString("result")
+                        val parts = result.split(",")
+                        if (parts.size == 2) {
+                            val percentage = parts[0].toFloatOrNull()
+                            val flagged = parts[1] == "FLAGGED"
+                            _flag_percentage.postValue(percentage)
+                            _isFlagged.postValue(flagged)
+                            Log.d("updateFlagPrediction", "Updated flag percentage: ${_flag_percentage.value}, is flagged: ${_isFlagged.value}")
+                        } else {
+                            Log.e("updateFlagPrediction", "Invalid response format")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("updateFlagPrediction", "Error parsing JSON response", e)
+                    }
+                } else {
+                    Log.e("updateFlagPrediction", "Response data is null")
+                }
+            }
+        })
     }
 
     fun updateBudget() {
@@ -140,6 +210,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         _username.value = user.username
         sharedPreferencesHelper.saveUser(user)
         updateBudget()
+        updateFlagPrediction()
     }
 
     fun logout() {
@@ -148,9 +219,11 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         _username.value = null
         _isLoggedIn.value = false
         sharedPreferencesHelper.clearUser()
+        updateBudget()
+        updateFlagPrediction()
     }
 
-    fun updateBalance(newBalance: Float) {
+    fun updateBalance(newBalance: Float, is_bet: Boolean?) {
         balance.value = newBalance
         _user.value?.let {
             val updatedUser = it.copy(total_remain = newBalance)
@@ -162,11 +235,15 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 userRepository.updateBalance(it.customer_id, newBalance)
             }
         }
+        if(is_bet == true){
+            updateFlagPrediction()
+        }
     }
 
     fun updateData(newDate: String) {
         date.value = newDate
         sharedPreferencesHelper.saveDate(newDate)
         updateBudget()
+        updateFlagPrediction()
     }
 }
