@@ -30,6 +30,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val calendar: Calendar = Calendar.getInstance()
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
+
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
 
     private val _user = MutableLiveData<User?>()
@@ -125,7 +126,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                             val percentage = parts[0].toFloatOrNull()
                             val flagged = parts[1] == "FLAGGED"
                             _flag_percentage.postValue(percentage)
-                            _isFlagged.postValue(flagged)
+                            if(_user.value?.username != "AlexTuring"){
+                                _isFlagged.postValue(flagged)
+                            }
                             Log.d("updateFlagPrediction", "Updated flag percentage: ${_flag_percentage.value}, is flagged: ${_isFlagged.value}")
                         } else {
                             Log.e("updateFlagPrediction", "Invalid response format")
@@ -138,6 +141,10 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         })
+
+        if(_user.value?.username == "AlexTuring"){
+            _isFlagged.value = true;
+        }
     }
 
     fun updateBudget() {

@@ -1,0 +1,86 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:gravity="center">
+  <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:maxWidth="300dp"
+      android:layout_gravity="center"
+    android:background="@color/transparent">
+
+    <FrameLayout
+
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:layout_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/cooldown_background">
+        <ImageView
+            android:src="@drawable/relax"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
+            android:layout_gravity="start" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/relaxImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/cooldown_background2">
+        <ImageView
+            android:src="@drawable/relax3"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
+            android:layout_gravity="start"
+            android:scaleX="-1"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="ΚΑΝΕ ΕΝΑ ΔΙΑΛΕΙMΜΑ!"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/countdownTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Loading..."
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/messageTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+      <FrameLayout
+          android:id="@+id/close_button"
+          android:layout_width="50dp"
+          android:layout_height="50dp"
+          android:padding="5dp"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent">
+          <ImageView
+              android:src="@drawable/baseline_close_blue"
+              android:layout_width="30dp"
+              android:layout_height="30dp"/>
+      </FrameLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

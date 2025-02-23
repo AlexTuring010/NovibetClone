@@ -173,6 +173,13 @@ class SlotGameDetailActivity : AppCompatActivity() {
                 Toast.makeText(this, "Το υπόλοιπο σου δεν επαρκεί για αυτό το στοίχημα.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            if(userViewModel.isFlagged.value == true){
+                val endDate = "2025-02-23 14:00:00" // Example end date
+                val countdownDialog = CountdownDialogFragment.newInstance(endDate)
+                countdownDialog.isCancelable = false // Prevent dismissing the dialog
+                countdownDialog.show(supportFragmentManager, "CountdownDialogFragment")
+                return@setOnClickListener
+            }
             playButtonClickSound()
             videoView.start()
         }
