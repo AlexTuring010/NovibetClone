@@ -22,7 +22,8 @@ import java.util.concurrent.TimeUnit
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 import java.time.DayOfWeek
-
+import android.util.Log
+import org.json.JSONObject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class UserViewModel(application: Application) : AndroidViewModel(application) {
@@ -69,7 +70,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun updateBudget(){
+    fun updateBudget() {
         val client = OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS) // Increase connection timeout
             .readTimeout(60, TimeUnit.SECONDS)    // Increase read timeout
@@ -79,15 +80,19 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         // Parse the input date
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val parsedDate = LocalDate.parse(_date.value, dateFormatter)
+        Log.d("updateBudget", "Parsed date: $parsedDate")
 
         // Determine the first day of the week (Monday)
         val firstDayOfWeek = parsedDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        Log.d("updateBudget", "First day of the week: $firstDayOfWeek")
 
         // Format the first day of the week to the required string format
         val formattedFirstDayOfWeek = firstDayOfWeek.format(dateFormatter)
+        Log.d("updateBudget", "Formatted first day of the week: $formattedFirstDayOfWeek")
 
         // Construct the URL with the customer_id and the first day of the week date
         val url = "https://ctrl-alt-dit-yb2k.onrender.com/predict_budget?customer_id=${_user.value?.customer_id}&date=${formattedFirstDayOfWeek}"
+        Log.d("updateBudget", "Constructed URL: $url")
 
         val request = Request.Builder()
             .url(url)
@@ -95,19 +100,34 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e("updateBudget", "Request failed", e)
                 e.printStackTrace()
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
+                    Log.e("updateBudget", "Unexpected response code: ${response.code}")
                     return
                 }
 
                 val responseData = response.body?.string()
+                Log.d("updateBudget", "Response data: $responseData")
+
                 if (responseData != null) {
-                    budget.setValue(responseData.toFloatOrNull())
+                    try {
+                        val jsonObject = JSONObject(responseData)
+                        val predictedBudget = jsonObject.getString("predicted_budget").toFloatOrNull()
+                        if (predictedBudget != null) {
+                            budget.postValue(predictedBudget)
+                            Log.d("updateBudget", "Updated budget: ${budget.value}")
+                        } else {
+                            Log.e("updateBudget", "Invalid predicted_budget value")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("updateBudget", "Error parsing JSON response", e)
+                    }
                 } else {
-                    return
+                    Log.e("updateBudget", "Response data is null")
                 }
             }
         })

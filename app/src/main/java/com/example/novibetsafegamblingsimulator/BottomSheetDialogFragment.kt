@@ -34,7 +34,8 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
         val username: TextView = view.findViewById(R.id.profile_name)
 
         userViewModel.budget.observe(viewLifecycleOwner, Observer { newBudget ->
-            budget.text = "{$newBudget}"
+            val integerPart = newBudget?.toInt() ?: 0
+            budget.text = "$integerPart€"
         })
 
         userViewModel.balance.observe(viewLifecycleOwner, Observer { newBalance ->

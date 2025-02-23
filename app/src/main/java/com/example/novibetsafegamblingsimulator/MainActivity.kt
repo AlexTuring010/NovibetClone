@@ -2,6 +2,7 @@ package com.example.novibetsafegamblingsimulator
 
 import android.app.Dialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityOptionsCompat
@@ -39,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var userViewModel: UserViewModel
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -217,6 +220,7 @@ class MainActivity : AppCompatActivity() {
 
     private val userRepository = UserRepository()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showPopup() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.add_money_popup)
